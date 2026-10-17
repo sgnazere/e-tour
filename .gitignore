@@ -1,0 +1,6 @@
+# Fichiers à ne jamais publier
+*.csv
+export*/
+.env
+.DS_Store
+Thumbs.db

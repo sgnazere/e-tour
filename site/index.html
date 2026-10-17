@@ -1,0 +1,511 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>e-Tour Côte d'Ivoire</title>
+<meta name="description" content="Compare 16 villes de Côte d'Ivoire en face-à-face et réserve ton week-end de visite.">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Syne:wght@600;700;800&family=Manrope:wght@400;500;600;700&display=swap">
+<style>
+/* Layout : landing éditoriale (nav, hero + mosaïque, étapes, galerie filtrable, départs) puis parcours en 5 étapes */
+:root{
+  --bg:#f6f4ef; --surface:#ffffff; --ink:#1b2420; --muted:#5d6a63; --line:#e1ddd2;
+  --lagune:#0f6b5c; --lagune-soft:#dcefe9; --laterite:#d4652a; --laterite-soft:#fbe7db; --deep:#0c2a24;
+  --display:"Syne",system-ui,sans-serif; --body:"Manrope",system-ui,sans-serif;
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#121815; --surface:#1b2420; --ink:#eef1ec; --muted:#9fb0a7; --line:#2c3833;
+  --lagune:#3fbfa6; --lagune-soft:#183a33; --laterite:#f08a52; --laterite-soft:#3a251a; --deep:#0a1f1a; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#121815; --surface:#1b2420; --ink:#eef1ec; --muted:#9fb0a7; --line:#2c3833;
+  --lagune:#3fbfa6; --lagune-soft:#183a33; --laterite:#f08a52; --laterite-soft:#3a251a; --deep:#0a1f1a; color-scheme:dark}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:0 48px}
+[hidden]{display:none!important}
+body{margin:0}
+img{max-width:100%}
+.wrap{max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:22px}
+.flow{max-width:720px;margin:0 auto;width:100%;display:flex;flex-direction:column;gap:22px;padding-top:24px}
+nav{display:flex;justify-content:space-between;align-items:center;gap:12px;padding-block:18px;border-bottom:1px solid var(--line)}
+.brand{font-family:var(--display);font-weight:800;font-size:22px;letter-spacing:-.02em;line-height:1}
+.brand span{color:var(--laterite)}
+.navlinks{display:flex;gap:18px;align-items:center;font-size:14px;font-weight:600}
+.navlinks a{color:var(--muted);text-decoration:none}
+.navlinks a:hover{color:var(--ink)}
+@media (max-width:620px){.navlinks a{display:none}}
+.btn{font:inherit;font-weight:700;border:0;border-radius:10px;padding:12px 18px;background:var(--laterite);color:#fff;cursor:pointer;align-self:flex-start}
+.btn.sm{padding:9px 14px;font-size:14px}
+.btn.ghost{background:transparent;color:var(--lagune);border:1px solid var(--lagune)}
+input:focus-visible,button:focus-visible,a:focus-visible{outline:2px solid var(--laterite);outline-offset:2px}
+
+/* Hero */
+.hero{display:grid;grid-template-columns:1.05fr 1fr;gap:36px;align-items:center;padding-block:28px 8px}
+@media (max-width:860px){.hero{grid-template-columns:1fr}}
+.hero .txt{display:flex;flex-direction:column;gap:18px;min-width:0}
+.eyebrow{font-size:12px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:var(--lagune)}
+.hero h1{font-family:var(--display);font-weight:800;font-size:clamp(34px,5.6vw,60px);line-height:1;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.hero h1 em{font-style:normal;color:var(--laterite)}
+.hero p{margin:0;color:var(--muted);max-width:52ch;font-size:16px}
+.ctas{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.stats{display:flex;gap:28px;flex-wrap:wrap;padding-top:6px}
+.stats div{display:flex;flex-direction:column}
+.stats b{font-family:var(--display);font-size:28px;font-weight:800;line-height:1;font-variant-numeric:tabular-nums}
+.stats span{font-size:12px;color:var(--muted);font-weight:600}
+.mosaic{aspect-ratio:4/3;max-width:100%;display:grid;grid-template-columns:1.4fr 1fr;grid-template-rows:1fr 1fr;gap:10px;min-width:0}
+.mosaic figure{margin:0;border-radius:16px;overflow:hidden;position:relative;min-height:0}
+.mosaic figure:first-child{grid-row:span 2}
+.mosaic svg{display:block;width:100%;height:100%;object-fit:cover}
+.mosaic figcaption{position:absolute;left:10px;bottom:10px;background:rgba(12,42,36,.82);color:#fff;font-size:12px;font-weight:700;padding:5px 9px;border-radius:7px}
+.banner{background:var(--lagune-soft);border:1px solid var(--lagune);border-radius:12px;padding:14px 16px;font-size:14px}
+.banner b{color:var(--lagune)}
+
+/* Sections */
+section.block{display:flex;flex-direction:column;gap:18px;padding-top:34px}
+.sechead{display:flex;justify-content:space-between;align-items:flex-end;gap:16px;flex-wrap:wrap}
+h2{font-family:var(--display);font-weight:700;font-size:clamp(22px,3.4vw,30px);margin:0;letter-spacing:-.01em;text-wrap:balance}
+.how{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+@media (max-width:720px){.how{grid-template-columns:1fr}}
+.how div{border-top:3px solid var(--lagune);padding-top:12px;display:flex;flex-direction:column;gap:4px}
+.how b{font-family:var(--display);font-size:17px}
+.how small{font-size:13px;color:var(--muted)}
+.how .n{font-size:12px;font-weight:700;color:var(--laterite);letter-spacing:.08em}
+.chips{display:flex;gap:6px;flex-wrap:wrap}
+.chip{font:inherit;font-size:13px;font-weight:600;padding:7px 12px;border-radius:99px;border:1px solid var(--line);background:var(--surface);color:var(--muted);cursor:pointer}
+.chip.on{background:var(--ink);border-color:var(--ink);color:var(--bg)}
+.gallery{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:16px}
+.vcard{background:var(--surface);border:1px solid var(--line);border-radius:14px;overflow:hidden;display:flex;flex-direction:column;transition:transform .2s}
+.vcard:hover{transform:translateY(-3px)}
+.vcard svg,.city svg{display:block;width:100%;height:auto;aspect-ratio:16/9;max-width:100%}
+.vcard .in{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px;flex:1}
+.vcard .nm{font-family:var(--display);font-weight:800;font-size:20px;line-height:1.1}
+.reg{font-size:11px;text-transform:uppercase;letter-spacing:.08em;color:var(--muted);font-weight:700}
+.tag{font-size:13px;color:var(--muted)}
+.vcard .meta{display:flex;justify-content:space-between;gap:8px;font-size:12px;font-weight:600;margin-top:auto;padding-top:8px;font-variant-numeric:tabular-nums}
+.vcard .meta span:first-child{color:var(--lagune)}
+.vcard .meta span:last-child{color:var(--laterite)}
+.vcard.mine{outline:2px solid var(--laterite)}
+.departs{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+.departs div{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:12px 14px;display:flex;flex-direction:column}
+.departs b{font-variant-numeric:tabular-nums}
+.departs span{font-size:12px;color:var(--muted)}
+.cta-band{background:var(--deep);color:#fff;border-radius:18px;padding:28px;display:flex;justify-content:space-between;align-items:center;gap:16px;flex-wrap:wrap;margin-top:34px}
+.cta-band h2{color:#fff}
+.cta-band p{margin:4px 0 0;color:#b9cfc8;font-size:14px}
+footer{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding-top:16px;margin-top:20px;display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+
+/* Parcours */
+.steps{display:flex;gap:6px;flex-wrap:wrap;padding:0;margin:0}
+.steps li{list-style:none;font-size:12px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;padding:5px 10px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}
+.steps li.on{background:var(--lagune);border-color:var(--lagune);color:var(--surface)}
+.steps li.done{color:var(--lagune);border-color:var(--lagune)}
+.panel{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:22px;display:flex;flex-direction:column;gap:16px}
+.panel h2{font-size:22px}
+.hint{color:var(--muted);font-size:14px;margin:0}
+label{font-weight:600;font-size:13px;display:flex;flex-direction:column;gap:6px}
+input{font:inherit;padding:11px 12px;border-radius:9px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media (max-width:520px){.grid2{grid-template-columns:1fr}}
+.err{color:var(--laterite);font-size:13px;margin:0}
+.round{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--muted);font-variant-numeric:tabular-nums}
+.round b{color:var(--laterite);text-transform:uppercase;letter-spacing:.06em;font-size:12px}
+.duel{display:grid;grid-template-columns:1fr auto 1fr;gap:12px;align-items:stretch}
+.vs{align-self:center;font-family:var(--display);font-weight:800;color:var(--muted)}
+.city{font:inherit;text-align:left;cursor:pointer;border:2px solid var(--line);border-radius:14px;padding:0;overflow:hidden;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;transition:transform .15s,border-color .15s}
+.city:hover{border-color:var(--lagune);transform:translateY(-2px)}
+.city .in{padding:12px 14px 14px;display:flex;flex-direction:column;gap:4px}
+.city .nm{font-family:var(--display);font-weight:800;font-size:clamp(19px,4vw,24px);line-height:1.1}
+.km{font-size:12px;font-weight:600;color:var(--lagune);font-variant-numeric:tabular-nums}
+@media (max-width:520px){.duel{grid-template-columns:1fr}.vs{justify-self:center}}
+.progress{height:6px;background:var(--line);border-radius:6px;overflow:hidden}
+.progress i{display:block;height:100%;background:var(--lagune);transition:width .25s}
+.rows{display:flex;flex-direction:column;gap:9px}
+.row{display:grid;grid-template-columns:130px 1fr 64px;gap:10px;align-items:center;font-size:14px}
+.row b{font-weight:700;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.bar{height:11px;background:var(--line);border-radius:6px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--lagune);border-radius:6px}
+.row.top .bar i{background:var(--laterite)}
+.row span{text-align:right;font-variant-numeric:tabular-nums;font-weight:700;font-size:13px}
+.winner{background:var(--laterite-soft);border-radius:12px;padding:16px;display:flex;flex-direction:column;gap:4px}
+.winner .nm{font-family:var(--display);font-weight:800;font-size:28px;color:var(--laterite)}
+.note{font-size:12px;color:var(--muted);background:var(--lagune-soft);padding:8px 10px;border-radius:8px}
+.dates{display:grid;grid-template-columns:repeat(auto-fill,minmax(190px,1fr));gap:10px}
+.date{font:inherit;cursor:pointer;text-align:left;border:2px solid var(--line);border-radius:12px;padding:12px 14px;background:var(--bg);color:var(--ink);display:flex;flex-direction:column;gap:2px}
+.date .d{font-weight:700}
+.date .w{font-size:12px;color:var(--muted)}
+.date.sel{border-color:var(--laterite);background:var(--laterite-soft)}
+.recap{display:flex;flex-direction:column;gap:6px;font-size:14px}
+.recap div{display:flex;justify-content:space-between;gap:10px;border-bottom:1px dashed var(--line);padding-bottom:6px}
+.recap div span:first-child{color:var(--muted)}
+.back{font-size:13px;color:var(--muted);margin:0}
+.flowbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+.quit{font:inherit;font-size:13px;font-weight:700;background:transparent;color:var(--muted);border:1px solid var(--line);border-radius:99px;padding:6px 12px;cursor:pointer}
+.quit:hover{color:var(--laterite);border-color:var(--laterite)}
+.quitbox{background:var(--laterite-soft);border:1px solid var(--laterite);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:10px;font-size:14px}
+.quitbox .ctas .btn{padding:9px 14px;font-size:14px}
+@media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav>
+    <div class="brand">e-Tour <span>CI</span></div>
+    <div class="navlinks"><a href="#villes" data-home>Les villes</a><a href="#departs" data-home>Prochains départs</a><button class="btn sm" data-start>Participer</button></div>
+  </nav>
+
+  <!-- 0 Accueil -->
+  <main id="s0">
+    <div class="hero">
+      <div class="txt">
+        <span class="eyebrow">Week-ends découverte · Côte d'Ivoire</span>
+        <h1>De Man à Assinie, <em>choisis ta prochaine escapade.</em></h1>
+        <p>Compare 16 villes ivoiriennes en face-à-face, découvre celle qui te ressemble et pars la visiter avec le groupe e-Tour, du vendredi au dimanche.</p>
+        <div class="banner" id="banner" hidden></div>
+        <div class="ctas"><button class="btn" data-start>Faire mon face-match</button><a class="btn ghost" href="#villes">Voir les villes</a></div>
+        <div class="stats"><div><b>16</b><span>villes</span></div><div><b>5</b><span>zones du pays</span></div><div><b id="statVotes">0</b><span>votes</span></div></div>
+      </div>
+      <div class="mosaic" id="mosaic"></div>
+    </div>
+
+    <section class="block">
+      <h2>Comment ça marche</h2>
+      <div class="how">
+        <div><span class="n">ÉTAPE 1</span><b>Inscris-toi</b><small>Un pseudo et ton numéro WhatsApp. Pas de vrai nom, une seule participation par numéro.</small></div>
+        <div><span class="n">ÉTAPE 2</span><b>Fais tes duels</b><small>15 face-à-face, éliminatoires jusqu'à la finale. La gagnante est ta ville.</small></div>
+        <div><span class="n">ÉTAPE 3</span><b>Réserve ton week-end</b><small>Vendredi au dimanche, entre le 25 du mois et le 10 du mois suivant.</small></div>
+      </div>
+    </section>
+
+    <section class="block" id="villes">
+      <div class="sechead"><h2>Les villes à découvrir</h2><div class="chips" id="chips"></div></div>
+      <div class="gallery" id="gallery"></div>
+    </section>
+
+    <section class="block" id="departs">
+      <h2>Prochains week-ends de visite</h2>
+      <div class="departs" id="departList"></div>
+    </section>
+
+    <div class="cta-band">
+      <div><h2>Quelle ville t'attend ?</h2><p>Deux minutes de duels, un week-end à la clé.</p></div>
+      <button class="btn" data-start>Je participe</button>
+    </div>
+    <footer><span>© 2026 e-Tour Côte d'Ivoire</span><span>Photos : voir crédits sous chaque ville.</span></footer>
+  </main>
+
+  <div class="flow" id="flow" hidden>
+    <div class="flowbar">
+      <ul class="steps" id="steps">
+        <li>1 · Inscription</li><li>2 · Duels</li><li>3 · Mon score</li><li>4 · Tendance</li><li>5 · Date</li>
+      </ul>
+      <button class="quit" id="quit" type="button">✕ Renoncer</button>
+    </div>
+    <div class="quitbox" id="quitBox" hidden role="alertdialog" aria-labelledby="quitText">
+      <span id="quitText"></span>
+      <div class="ctas"><button class="btn" id="quitYes" type="button">Oui, renoncer</button><button class="btn ghost" id="quitNo" type="button">Non, je continue</button></div>
+    </div>
+
+    <section class="panel" id="s1">
+      <h2>Qui participe ?</h2>
+      <form id="form" class="rows" novalidate>
+        <label for="pseudo">Pseudo ou surnom<input id="pseudo" required maxlength="30" autocomplete="nickname" placeholder="Ex. : Koffi_07"></label>
+        <label for="tel">Numéro WhatsApp<input id="tel" inputmode="numeric" autocomplete="tel" placeholder="07 00 00 00 00"></label>
+        <p class="hint">Pas besoin de ton vrai nom : un pseudo suffit. Ton numéro sert seulement à te contacter sur WhatsApp pour la visite.</p>
+        <label for="consent" style="flex-direction:row;align-items:flex-start;gap:8px;font-weight:500"><input type="checkbox" id="consent" style="margin-top:4px"> J'accepte que mon numéro WhatsApp serve uniquement à me contacter pour la visite e-Tour. Il est supprimé après la saison.</label>
+        <p class="err" id="err" hidden></p>
+        <button class="btn" type="submit">Commencer les duels</button>
+      </form>
+    </section>
+
+    <section class="panel" id="s2" hidden>
+      <h2>Laquelle tu préfères découvrir ?</h2>
+      <div class="round"><b id="roundName"></b><span id="count"></span></div>
+      <div class="progress"><i id="prog"></i></div>
+      <div class="duel" id="duel"></div>
+    </section>
+
+    <section class="panel" id="s3" hidden>
+      <h2>Ton score personnel</h2>
+      <div class="winner"><span class="hint">Ta ville championne</span><span class="nm" id="topName"></span><span class="hint" id="topWhy"></span></div>
+      <div class="rows" id="perso"></div>
+      <button class="btn" id="toTrend">Voir la tendance générale</button>
+    </section>
+
+    <section class="panel" id="s4" hidden>
+      <h2>La tendance de tous les participants</h2>
+      <div class="rows" id="trend"></div>
+      <p class="hint" id="trendNote"></p>
+      <button class="btn" id="toDate"></button>
+    </section>
+
+    <section class="panel" id="s5" hidden>
+      <h2 id="dateTitle"></h2>
+      <p class="hint">Les visites se font toujours du vendredi au dimanche, entre le 25 du mois et le 10 du mois suivant.</p>
+      <div class="dates" id="dates"></div>
+      <button class="btn" id="confirm" disabled>Confirmer mon week-end</button>
+      <div class="recap" id="recap" hidden></div>
+    </section>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.45.4/dist/umd/supabase.js"></script>
+<script src="config.js"></script>
+<script>
+/* Illustrations vectorielles (aperçu) */
+const palm=(x,y,h)=>`<path d="M${x} ${y}q4 -${h/2} -2 -${h}" stroke="#5b3a1e" stroke-width="4" fill="none"/>`+[[-28,6],[26,4],[-18,-10],[20,-12],[0,-16]].map(([a,b])=>`<path d="M${x-2} ${y-h}q${a/2} ${b-10} ${a} ${b+8}" stroke="#2f7d3b" stroke-width="5" fill="none" stroke-linecap="round"/>`).join("");
+const hut=(x,y,s)=>`<rect x="${x-14*s}" y="${y-18*s}" width="${28*s}" height="${18*s}" fill="#c9844a"/><path d="M${x-20*s} ${y-16*s}L${x} ${y-40*s}L${x+20*s} ${y-16*s}Z" fill="#8a6a2f"/>`;
+const tree=(x,y,r,c)=>`<rect x="${x-2}" y="${y}" width="4" height="${r}" fill="#5b3a1e"/><circle cx="${x}" cy="${y}" r="${r}" fill="${c||"#2f6b3b"}"/>`;
+const pirogue=(x,y)=>`<path d="M${x} ${y}h50l-8 7h-34z" fill="#7a4b2a"/><path d="M${x+24} ${y}v-20" stroke="#3a2a1a" stroke-width="2"/>`;
+const SCENES={
+ basilique:()=>`<rect y="128" width="320" height="52" fill="#3d8fa3"/><path d="M0 132h320" stroke="#a8d6e0" stroke-width="2"/><rect x="110" y="88" width="100" height="40" fill="#efe6d4"/>${[0,1,2,3,4,5,6].map(i=>`<rect x="${114+i*14}" y="92" width="5" height="36" fill="#cdbf9f"/>`).join("")}<ellipse cx="160" cy="88" rx="38" ry="34" fill="#dfe7ee"/><rect x="122" y="84" width="76" height="6" fill="#efe6d4"/><rect x="157" y="40" width="6" height="18" fill="#c9a24a"/><rect x="152" y="46" width="16" height="4" fill="#c9a24a"/>`,
+ bassam:()=>`<rect y="130" width="320" height="50" fill="#e9cf98"/><rect y="118" width="320" height="14" fill="#2e8fb0"/><rect x="40" y="70" width="150" height="56" fill="#e9a66b"/><rect x="40" y="62" width="150" height="10" fill="#b4543a"/>${[0,1,2,3,4].map(i=>`<path d="M${52+i*28} 120v-24a8 8 0 0 1 16 0v24z" fill="#6b3a2a"/>`).join("")}${palm(240,128,60)}`,
+ assinie:()=>`<rect y="110" width="320" height="70" fill="#2a9bb0"/><path d="M0 125q40 -6 80 0t80 0t80 0t80 0" stroke="#bfe8ef" stroke-width="2" fill="none"/><rect y="104" width="320" height="10" fill="#e9d29b"/>${palm(50,108,58)}${palm(90,108,46)}${palm(280,108,62)}<path d="M140 150h80l-10 10h-60z" fill="#7a4b2a"/><path d="M180 150v-34l22 30z" fill="#f2f2f2"/>`,
+ port:()=>`<rect y="118" width="320" height="62" fill="#1f6f8f"/><rect x="0" y="108" width="140" height="12" fill="#7d7a73"/><path d="M40 108v-60h6v60M46 52h50" stroke="#e4a33a" stroke-width="5" fill="none"/><path d="M96 52v20" stroke="#555" stroke-width="2"/><path d="M170 116h120l-14 18h-94z" fill="#b8392b"/>${[0,1,2,3].map(i=>`<rect x="${182+i*24}" y="${100-(i%2)*8}" width="20" height="${16+(i%2)*8}" fill="${["#2f6fb0","#e4a33a","#3f8f4f","#d4652a"][i]}"/>`).join("")}`,
+ man:()=>`<path d="M0 140L60 70L100 110L150 40L170 30L185 45L230 90L270 60L320 120V180H0Z" fill="#2f6b45"/><path d="M150 40L170 30L185 45L172 52Z" fill="#5a7d63"/><path d="M0 150L80 120L160 150L240 118L320 145V180H0Z" fill="#3f8a4f"/><path d="M206 78q-3 40 4 90" stroke="#e7f6fb" stroke-width="10" fill="none"/><ellipse cx="210" cy="168" rx="26" ry="6" fill="#bfe3ef"/>`,
+ korhogo:()=>`<rect y="132" width="320" height="48" fill="#d9a35b"/>${hut(70,134,1.2)}${hut(130,134,.9)}${hut(250,134,1.3)}<rect x="160" y="60" width="64" height="60" fill="#f1e6cf" stroke="#3a2a1a" stroke-width="2"/><path d="M172 104l12-30l12 30M200 104q8-24 16 0M170 112h48" stroke="#3a2a1a" stroke-width="3" fill="none"/><circle cx="208" cy="76" r="5" fill="#3a2a1a"/>`,
+ marche:()=>`<rect y="130" width="320" height="50" fill="#b9864f"/>${[0,1,2,3].map(i=>{const x=20+i*76,c=["#d4652a","#2f8f6f","#e4b53a","#b8392b"][i];return `<path d="M${x} 92h64l-8 -18h-48z" fill="${c}"/><rect x="${x+4}" y="92" width="56" height="38" fill="#f1e1c3"/>${[0,1,2].map(j=>`<circle cx="${x+16+j*16}" cy="102" r="5" fill="${["#e46b3a","#f2c94c","#6aa84f"][j]}"/>`).join("")}<rect x="${x+4}" y="112" width="56" height="18" fill="#8a5a2f"/>`}).join("")}`,
+ phare:()=>`<rect y="120" width="320" height="60" fill="#1d7fa3"/><path d="M190 180L210 104L320 96V180Z" fill="#7b5a3a"/><path d="M244 100l4 -58h16l4 58z" fill="#f3f0e8"/><rect x="246" y="62" width="20" height="8" fill="#c0392b"/><rect x="246" y="82" width="20" height="8" fill="#c0392b"/><rect x="248" y="32" width="16" height="12" fill="#f6d36b"/><path d="M256 38L190 26M256 38L190 50" stroke="#f6d36b" stroke-width="2" opacity=".7"/>${pirogue(40,150)}`,
+ jacqueville:()=>`<rect y="112" width="320" height="68" fill="#2f8fa8"/><path d="M0 96h320v8H0z" fill="#d8d3c8"/>${[0,1,2,3,4,5,6,7].map(i=>`<rect x="${14+i*40}" y="104" width="6" height="30" fill="#bdb6a8"/>`).join("")}<path d="M0 96q160 -26 320 0" stroke="#e8e3d8" stroke-width="3" fill="none"/>${pirogue(70,150)}${palm(260,112,40)}`,
+ bereby:()=>`<rect y="100" width="320" height="80" fill="#1e94b4"/><path d="M0 100q90 30 180 18t140 -10v72H0z" fill="#29a9c4"/><path d="M180 180q20 -40 60 -52q40 -8 80 -6v58z" fill="#efd9a0"/><ellipse cx="60" cy="118" rx="26" ry="10" fill="#6b5a4a"/><ellipse cx="90" cy="124" rx="14" ry="6" fill="#7d6a58"/>${palm(250,150,56)}${palm(290,146,44)}<ellipse cx="230" cy="166" rx="9" ry="6" fill="#4f6b3f"/>`,
+ fresco:()=>`<rect y="116" width="320" height="64" fill="#3a8f8a"/>${[0,1,2,3,4,5,6,7,8].map(i=>`<path d="M${i*36} 120q8 -18 16 0M${i*36+8} 120v-10" stroke="#2f5a32" stroke-width="3" fill="none"/><circle cx="${i*36+8}" cy="${104}" r="12" fill="#3f7a3b"/>`).join("")}${pirogue(60,148)}${pirogue(190,160)}<path d="M200 160l14 -14l14 14" stroke="#e8e3d8" stroke-width="1.5" fill="none"/>`,
+ soubre:()=>`<rect y="140" width="320" height="40" fill="#2f86a3"/><path d="M0 70h320v20H0z" fill="#3a9bbd"/><rect x="0" y="88" width="320" height="16" fill="#9ea39b"/>${[0,1,2,3,4,5].map(i=>`<rect x="${20+i*52}" y="104" width="30" height="36" fill="#cfd5dc"/>`).join("")}${[0,1,2,3,4,5].map(i=>`<path d="M${35+i*52} 104v36" stroke="#eaf6fb" stroke-width="8"/>`).join("")}${tree(300,58,10)}${tree(20,60,9)}`,
+ daloa:()=>`<rect y="128" width="320" height="52" fill="#7a5a32"/>${[0,1,2,3,4,5,6].map(i=>tree(20+i*48,96+(i%2)*10,18,i%2?"#2f6b3b":"#3f7f44")).join("")}${[0,1,2].map(i=>`<ellipse cx="${60+i*100}" cy="140" rx="10" ry="16" fill="${["#c46a2b","#e1a03a","#8a3f22"][i]}" transform="rotate(-20 ${60+i*100} 140)"/>`).join("")}`,
+ palais:()=>`<rect y="132" width="320" height="48" fill="#c79a5b"/><rect x="80" y="70" width="160" height="62" fill="#f2ead8"/><path d="M70 74L160 40L250 74Z" fill="#c9a24a"/>${[0,1,2,3,4].map(i=>`<rect x="${96+i*30}" y="80" width="8" height="52" fill="#d9c9a4"/>`).join("")}<rect x="148" y="100" width="24" height="32" fill="#6b3a2a"/><circle cx="160" cy="56" r="6" fill="#f6d36b"/>${tree(36,104,16)}${tree(286,104,16)}`,
+ ferke:()=>`<rect y="120" width="320" height="60" fill="#8fb85a"/>${Array.from({length:22},(_,i)=>`<path d="M${i*15} 180v-${50+(i%3)*10}" stroke="#4f8a32" stroke-width="3"/><path d="M${i*15} ${130-(i%3)*10}l-8 -6M${i*15} ${140-(i%3)*10}l8 -6" stroke="#6aa84f" stroke-width="2"/>`).join("")}<rect x="236" y="70" width="60" height="50" fill="#a9a39a"/><rect x="276" y="34" width="10" height="36" fill="#8a837a"/><circle cx="281" cy="26" r="8" fill="#e8e3d8" opacity=".8"/>`,
+ odienne:()=>`<path d="M0 120L70 70L120 96L170 60L240 100L320 80V180H0Z" fill="#a7774a"/><rect y="130" width="320" height="50" fill="#d6ad6a"/><rect x="120" y="86" width="90" height="46" fill="#c99561"/><rect x="132" y="66" width="18" height="66" fill="#b9864f"/><rect x="180" y="72" width="16" height="60" fill="#b9864f"/>${[0,1,2,3,4,5].map(i=>`<path d="M${128+i*14} 132v-50M${136+i*14} 92h4" stroke="#7a5230" stroke-width="2"/>`).join("")}${tree(40,110,14,"#6b7f3a")}${tree(280,112,12,"#6b7f3a")}`
+};
+const SKY={basilique:["#9fd4ec","#f6e2b6"],bassam:["#86c9e6","#fde7c0"],assinie:["#67c0dd","#ffe3b0"],port:["#8cc2dc","#f1d9b5"],man:["#a6d5df","#e8f1d8"],korhogo:["#f1c27d","#f7e6c4"],marche:["#e9a96b","#f8dcb0"],phare:["#f0a07a","#fbd8a8"],jacqueville:["#8fd0e6","#fdebc8"],bereby:["#5fbcd9","#d8f1f4"],fresco:["#f2b48a","#f9e2bf"],soubre:["#9cd1e2","#e6f2e4"],daloa:["#a9d8c5","#eef3d6"],palais:["#f4c48a","#fbe9cb"],ferke:["#f2cf7f","#fbf0cf"],odienne:["#f4a96e","#f9dcb0"]};
+function scene(k){const [a,b]=SKY[k];return `<svg viewBox="0 0 320 180" preserveAspectRatio="xMidYMid slice" aria-hidden="true"><defs><linearGradient id="g${k}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${a}"/><stop offset="1" stop-color="${b}"/></linearGradient></defs><rect width="320" height="180" fill="url(#g${k})"/><circle cx="60" cy="40" r="16" fill="#fff4cf" opacity=".9"/>${SCENES[k]()}</svg>`}
+const byName=n=>CITIES.find(c=>c.n===n);
+
+
+
+/* ================= Connexion Supabase ================= */
+const CONFIG_OK = !SUPABASE_URL.includes("COLLE-TON") && !SUPABASE_KEY.includes("COLLE-TA");
+const sb = CONFIG_OK ? supabase.createClient(SUPABASE_URL, SUPABASE_KEY) : null;
+
+const st={user:null,bracket:[],next:[],round:0,i:0,done:0,wins:{},seen:{},log:[],top:null,date:null,dateISO:null,booked:false,zone:"Toutes",votes:{},timer:null};
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"})[c]);
+const MESSAGES={
+  PSEUDO_INVALIDE:"Pseudo invalide : 2 à 30 caractères (lettres, chiffres, espace, _ . -).",
+  NUMERO_INVALIDE:"Numéro WhatsApp invalide : 10 chiffres commençant par 01, 05 ou 07.",
+  NUMERO_DEJA_INSCRIT:"Ce numéro WhatsApp a déjà participé. Une seule participation par numéro.",
+  PSEUDO_PRIS:"Ce pseudo est déjà pris. Choisis-en un autre.",
+  TROP_DE_DEMANDES:"Beaucoup d'inscriptions en ce moment. Réessaie dans quelques minutes.",
+  SESSION_EXPIREE:"Ta session a expiré. Recommence ton inscription avec un autre numéro ou contacte l'organisateur.",
+  DEJA_VOTE:"Tes duels sont déjà enregistrés.",
+  DEJA_RESERVE:"Tu as déjà réservé un week-end.",
+  DATE_INVALIDE:"Cette date n'est pas disponible. Choisis un autre week-end."
+};
+const errMsg=e=>{const m=(e&&e.message)||"";const k=Object.keys(MESSAGES).find(x=>m.includes(x));return k?MESSAGES[k]:"Problème de connexion. Vérifie ton internet et réessaie."};
+
+async function loadVotes(){
+  st.votes={};CITIES.forEach(c=>st.votes[c.n]=0);
+  if(!sb)return;
+  const {data,error}=await sb.rpc("tendance");
+  if(error){console.error(error);return}
+  data.forEach(r=>{if(r.ville in st.votes)st.votes[r.ville]=Number(r.victoires)});
+}
+async function loadDates(ville){
+  const map={};if(!sb)return map;
+  const {data,error}=await sb.rpc("interet_dates",{p_ville:ville});
+  if(error){console.error(error);return map}
+  data.forEach(r=>map[r.date_vendredi]=Number(r.inscrits));
+  return map;
+}
+
+/* ================= Navigation ================= */
+function show(n){
+  $("s0").hidden=n!==0;$("flow").hidden=n===0;
+  for(let k=1;k<=5;k++)$("s"+k).hidden=k!==n;
+  [...$("steps").children].forEach((li,i)=>{li.className=i+1===n?"on":i+1<n?"done":""});
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+document.querySelectorAll("[data-start]").forEach(b=>b.onclick=()=>{
+  if(!$("s0").hidden){resetFlow();$("err").hidden=true;show(1)}
+});
+// Liens du menu pendant le parcours : on passe par la confirmation
+document.querySelectorAll("[data-home]").forEach(a=>a.addEventListener("click",e=>{if($("s0").hidden){e.preventDefault();askQuit()}}));
+
+/* ================= Renoncer à tout moment ================= */
+function resetFlow(){
+  clearInterval(st.timer);
+  st.user=null;st.top=null;st.date=null;st.dateISO=null;st.booked=false;st.log=[];
+  $("form").reset();$("quitBox").hidden=true;$("recap").hidden=true;$("err").hidden=true;
+  $("confirm").textContent="Confirmer mon week-end";
+}
+function askQuit(){
+  if(!st.user){resetFlow();show(0);return}   // rien d'enregistré : retour direct
+  clearInterval(st.timer);
+  $("quitText").innerHTML=st.booked
+    ?"Tu veux annuler ta participation ? Ta réservation et tes votes seront effacés."
+    :"Tu veux renoncer ? Ton inscription et tes votes seront effacés.";
+  $("quitBox").hidden=false;$("quitYes").focus();
+}
+$("quit").onclick=askQuit;
+$("quitNo").onclick=()=>{$("quitBox").hidden=true};
+$("quitYes").onclick=async()=>{
+  $("quitYes").disabled=true;$("quitYes").textContent="Annulation…";
+  if(sb&&st.user)await sb.rpc("renoncer",{p_id:st.user.id});
+  $("quitYes").disabled=false;$("quitYes").textContent="Oui, renoncer";
+  resetFlow();
+  $("banner").innerHTML="Ta participation a été annulée. Tu peux revenir quand tu veux.";$("banner").hidden=false;
+  show(0);await loadVotes();renderGallery();
+};
+
+/* ================= Visuels : photo si fournie, sinon illustration ================= */
+function visual(c){
+  return c.photo
+    ? `<img src="${c.photo}" alt="${c.n}, ${c.t}" loading="lazy" style="display:block;width:100%;aspect-ratio:16/9;object-fit:cover">`
+    : scene(c.s);
+}
+
+/* ================= Accueil ================= */
+const totalVotes=()=>Object.values(st.votes).reduce((a,b)=>a+b,0);
+function renderMosaic(){
+  $("mosaic").innerHTML=["Assinie","Man","Yamoussoukro"].map(n=>{const c=byName(n);
+    return `<figure>${c.photo?`<img src="${c.photo}" alt="${n}" style="width:100%;height:100%;object-fit:cover;display:block">`:scene(c.s)}<figcaption>${n}</figcaption></figure>`}).join("");
+}
+function renderChips(){
+  const zones=["Toutes","Littoral","Centre","Ouest","Est","Nord"];
+  $("chips").innerHTML=zones.map(z=>`<button class="chip${z===st.zone?" on":""}" data-z="${z}">${z}</button>`).join("");
+  $("chips").querySelectorAll(".chip").forEach(b=>b.onclick=()=>{st.zone=b.dataset.z;renderChips();renderGallery()});
+}
+function renderGallery(){
+  const tot=totalVotes();$("statVotes").textContent=tot;
+  $("gallery").innerHTML=CITIES.filter(c=>st.zone==="Toutes"||c.z===st.zone).map(c=>{
+    const p=tot?(Math.round(st.votes[c.n]/tot*1000)/10).toString().replace(".",",")+" % des votes":"Pas encore de vote";
+    return `<article class="vcard${st.lastTop===c.n?" mine":""}">${visual(c)}<div class="in"><span class="reg">${c.z} · ${c.r}</span><span class="nm">${c.n}</span><span class="tag">${c.t}</span><div class="meta"><span>≈ ${c.km} km d'Abidjan</span><span>${p}</span></div>${c.credit?`<small class="tag" style="font-size:11px">${c.credit}</small>`:""}</div></article>`}).join("");
+}
+const MOIS=["janv.","févr.","mars","avr.","mai","juin","juil.","août","sept.","oct.","nov.","déc."];
+const fmt=d=>`${d.getDate()} ${MOIS[d.getMonth()]}`;
+const iso=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
+function weekends(from,count){
+  // Vendredi ET dimanche tous deux entre le 25 du mois et le 10 du mois suivant
+  const out=[],d=new Date(from);d.setHours(12,0,0,0);const ok=x=>x.getDate()>=25||x.getDate()<=10;
+  while(out.length<count){if(d.getDay()===5){const s=new Date(d);s.setDate(d.getDate()+2);if(ok(d)&&ok(s))out.push(new Date(d))}d.setDate(d.getDate()+1)}
+  return out;
+}
+const range=f=>{const s=new Date(f);s.setDate(f.getDate()+2);return `Ven ${fmt(f)} → Dim ${fmt(s)} ${s.getFullYear()}`};
+function renderDeparts(){
+  $("departList").innerHTML=weekends(new Date(),4).map(f=>`<div><b>${range(f)}</b><span>Toutes les villes · départ d'Abidjan</span></div>`).join("");
+}
+async function initHome(){
+  renderMosaic();renderChips();renderDeparts();
+  if(!CONFIG_OK){$("banner").innerHTML="<b>Configuration manquante :</b> colle ton URL et ta clé Supabase dans le fichier config.js.";$("banner").hidden=false}
+  await loadVotes();renderGallery();
+}
+initHome();show(0);
+
+/* ================= Inscription ================= */
+$("form").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const pseudo=$("pseudo").value.trim();
+  let tel=$("tel").value.replace(/\D/g,"");if(tel.length===13&&tel.startsWith("225"))tel=tel.slice(3);
+  const btn=e.submitter||$("form").querySelector("button");
+  let msg="";
+  if(!/^[\p{L}\p{N} _.'-]{2,30}$/u.test(pseudo))msg=MESSAGES.PSEUDO_INVALIDE;
+  else if(!/^(01|05|07)\d{8}$/.test(tel))msg=MESSAGES.NUMERO_INVALIDE;
+  else if(!$("consent").checked)msg="Coche la case d'accord pour continuer.";
+  else if(!sb)msg="Le site n'est pas encore relié à la base de données (config.js).";
+  if(!msg){
+    btn.disabled=true;btn.textContent="Enregistrement…";
+    const {data,error}=await sb.rpc("inscrire",{p_pseudo:pseudo,p_whatsapp:tel});
+    btn.disabled=false;btn.textContent="Commencer les duels";
+    if(error)msg=errMsg(error);else st.user={id:data,pseudo,tel};
+  }
+  $("err").hidden=!msg;$("err").textContent=msg;if(msg)return;
+  CITIES.forEach(c=>{st.wins[c.n]=0;st.seen[c.n]=0});
+  st.bracket=[...CITIES].sort(()=>Math.random()-.5);st.next=[];st.round=0;st.i=0;st.done=0;st.log=[];
+  renderDuel();show(2);
+});
+
+/* ================= Duels : tournoi 16 villes → 15 duels ================= */
+const ROUNDS=["Huitièmes de finale","Quarts de finale","Demi-finales","Finale"];
+function card(c){return `<button class="city" data-n="${c.n}">${visual(c)}<span class="in"><span class="reg">${c.z} · ${c.r}</span><span class="nm">${c.n}</span><span class="tag">${c.t}</span><span class="km">≈ ${c.km} km d'Abidjan</span></span></button>`}
+function renderDuel(){
+  const a=st.bracket[st.i],b=st.bracket[st.i+1];
+  $("roundName").textContent=ROUNDS[st.round];
+  $("count").textContent=`Duel ${st.done+1} sur 15`;
+  $("prog").style.width=(st.done/15*100)+"%";
+  $("duel").innerHTML=card(a)+'<span class="vs">VS</span>'+card(b);
+  $("duel").querySelectorAll(".city").forEach(btn=>btn.onclick=()=>{
+    const w=byName(btn.dataset.n),l=w===a?b:a;
+    st.wins[w.n]++;st.seen[a.n]++;st.seen[b.n]++;st.next.push(w);st.i+=2;st.done++;
+    st.log.push({g:w.n,p:l.n});
+    if(st.i>=st.bracket.length){
+      if(st.next.length===1){st.top=st.next[0].n;return finishDuels()}
+      st.bracket=st.next;st.next=[];st.i=0;st.round++;
+    }
+    renderDuel();
+  });
+}
+async function finishDuels(){
+  $("duel").innerHTML='<p class="hint">Enregistrement de tes choix…</p>';
+  const {data,error}=await sb.rpc("enregistrer_duels",{p_id:st.user.id,p_duels:st.log});
+  if(error&&!String(error.message).includes("DEJA_VOTE")){
+    $("duel").innerHTML=`<p class="err">${esc(errMsg(error))}</p><button class="btn" id="retry">Réessayer</button>`;
+    $("retry").onclick=finishDuels;return;
+  }
+  if(data)st.top=data;
+  renderScore();
+}
+function bars(el,list,topName){
+  el.innerHTML=list.map(x=>`<div class="row${x.n===topName?" top":""}"><b>${x.n}</b><div class="bar"><i style="width:${x.w}%"></i></div><span>${x.l}</span></div>`).join("");
+}
+function renderScore(){
+  const list=CITIES.map(c=>({n:c.n,v:st.wins[c.n]})).sort((a,b)=>b.v-a.v).slice(0,8)
+    .map(x=>({n:x.n,w:x.v/4*100,l:x.v===4?"Champion":x.v+" victoire"+(x.v>1?"s":"")}));
+  $("topName").textContent=st.top;
+  $("topWhy").textContent="Elle a remporté ses 4 duels, des huitièmes à la finale.";
+  bars($("perso"),list,st.top);show(3);
+}
+
+/* ================= Tendance ================= */
+$("toTrend").onclick=async()=>{
+  await loadVotes();
+  const tot=totalVotes()||1;
+  const list=CITIES.map(c=>({n:c.n,p:st.votes[c.n]/tot*100})).sort((a,b)=>b.p-a.p);
+  const max=list[0].p||1;
+  bars($("trend"),list.map(x=>({n:x.n,w:x.p/max*100,l:x.p.toFixed(1).replace(".",",")+" %"})),st.top);
+  const rank=list.findIndex(x=>x.n===st.top)+1;
+  $("trendNote").textContent=`${st.top} arrive ${rank===1?"1re":rank+"e"} sur 16 chez l'ensemble des participants.`;
+  $("toDate").textContent=`Choisir ma date pour ${st.top}`;show(4);
+};
+
+/* ================= Date ================= */
+$("toDate").onclick=async()=>{
+  $("dateTitle").textContent=`Quand veux-tu visiter ${st.top} ?`;
+  const inscrits=await loadDates(st.top);
+  $("dates").innerHTML=weekends(new Date(),6).map(f=>{const k=inscrits[iso(f)]||0;
+    return `<button class="date" data-k="${range(f)}" data-iso="${iso(f)}"><span class="d">${range(f)}</span><span class="w">${k?k+" personne"+(k>1?"s":"")+" déjà inscrite"+(k>1?"s":""):"Sois le premier inscrit"}</span></button>`}).join("");
+  $("dates").querySelectorAll(".date").forEach(b=>b.onclick=()=>{
+    $("dates").querySelectorAll(".date").forEach(x=>x.classList.remove("sel"));
+    b.classList.add("sel");st.date=b.dataset.k;st.dateISO=b.dataset.iso;$("confirm").disabled=false;});
+  $("recap").hidden=true;$("confirm").disabled=true;show(5);
+};
+$("confirm").onclick=async()=>{
+  $("confirm").disabled=true;$("confirm").textContent="Enregistrement…";
+  const {error}=await sb.rpc("reserver",{p_id:st.user.id,p_date:st.dateISO});
+  $("confirm").textContent="Confirmer mon week-end";
+  if(error){$("recap").innerHTML=`<p class="err">${esc(errMsg(error))}</p>`;$("recap").hidden=false;$("confirm").disabled=false;return}
+  const u=st.user,t=u.tel.replace(/(\d{2})(?=\d)/g,"$1 ");
+  $("recap").innerHTML=`<div><span>Pseudo</span><b>${esc(u.pseudo)}</b></div><div><span>WhatsApp</span><b>+225 ${t}</b></div><div><span>Ville</span><b>${st.top}</b></div><div><span>Week-end</span><b>${st.date}</b></div><p class="hint">Inscription enregistrée. L'équipe e-Tour te contactera sur WhatsApp.</p><p class="back" id="back"></p><button class="btn ghost" id="home">Retour à l'accueil</button>`;
+  $("recap").hidden=false;
+  $("dates").querySelectorAll(".date").forEach(b=>b.disabled=true);
+  st.booked=true;let s=8;
+  const tick=()=>{$("back").textContent=`Retour à l'accueil dans ${s} s…`;if(s--<=0)goHome()};
+  tick();st.timer=setInterval(tick,1000);$("home").onclick=goHome;
+};
+async function goHome(){
+  clearInterval(st.timer);
+  $("banner").innerHTML=`Merci <b>${esc(st.user.pseudo)}</b> ! Ton week-end à <b>${st.top}</b> (${st.date}) est noté. Découvre les autres villes en attendant.`;
+  $("banner").hidden=false;st.zone="Toutes";renderChips();
+  const booked=st.top;resetFlow();st.lastTop=booked;show(0);
+  await loadVotes();renderGallery();
+}
+
+</script>
+</body>
+</html>

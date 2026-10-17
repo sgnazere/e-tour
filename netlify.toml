@@ -1,0 +1,11 @@
+# Netlify publie UNIQUEMENT le dossier "site".
+# Le dossier "database" (script SQL) n'est jamais mis en ligne.
+[build]
+  publish = "site"
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
